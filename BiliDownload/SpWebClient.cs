@@ -6,6 +6,8 @@ using System.Net;
 
 namespace WindowsFormsApplication1
 {
+    //Thanks Inndy https://github.com/Inndy/
+    
     public class SpWebClient : WebClient
     {
         public CookieContainer CookieContainer { get; private set; }
