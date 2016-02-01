@@ -39,6 +39,9 @@ namespace WindowsFormsApplication1
         {
             WebRequest request = base.GetWebRequest(address);
             HttpWebRequest webRequest = request as HttpWebRequest;
+            /*假如在其他專案要解gzip可以加這一行 ^__^ 當時想說為什麼包抓的到但用程式抓就亂碼*/
+            //webRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+        
             if (webRequest != null) webRequest.CookieContainer = this.CookieContainer;
             return request;
         }

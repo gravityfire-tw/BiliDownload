@@ -29,6 +29,7 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+
             CheckForIllegalCrossThreadCalls = false;
             folder = Environment.CurrentDirectory + "\\BiliDownload\\";
             this.ccc = new CookieContainer();

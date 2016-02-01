@@ -16,10 +16,6 @@ namespace WindowsFormsApplication1
 {
     class API
     {
-     
-
-
-
         public static string bilibiliDownloadURL(string str)
         {
             str = str.Substring(str.IndexOf("<url><![CDATA[") + "<url><![CDATA[".Length);
