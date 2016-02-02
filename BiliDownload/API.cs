@@ -25,7 +25,7 @@ namespace WindowsFormsApplication1
 
         public static string decryptHook(string cid)
         {
-            String appkey = "85eb6835b0a1034e";//+ "Thanks anonymous Account ^______^+".Substring(0, 0);
+            String appkey = "85eb6835b0a1034e"+"Thanks anonymous Account ^______^+".Substring(0, 0);
             String secretkey = "2ad42749773c441109bdc0191257a664";
             MD5 md5 = MD5.Create();
             byte[] source = Encoding.UTF8.GetBytes("appkey=" + appkey + "&cid=" + cid + secretkey);//將字串轉為Byte[]
