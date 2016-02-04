@@ -18,120 +18,40 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        public static double _TOTALSIZE = 0, MAXSIZE = 0;
-        private CookieContainer ccc;
+
+        //My Name is UM ^______^  Welcome to Fork me XDD!!!
+        
+        private CookieContainer cc;
         private SpWebClient spwc;
         private List<string> hackListURL = new List<string>();
         private List<Data> There_are_many_ways_to_fame = new List<Data>();
-        public Thread MyThread;
+        private Thread downloadThread;
         private String folder;
-        
+
         public Form1()
         {
             InitializeComponent();
-
             CheckForIllegalCrossThreadCalls = false;
             folder = Environment.CurrentDirectory + "\\BiliDownload\\";
-            this.ccc = new CookieContainer();
-            this.spwc = new SpWebClient(ccc);
+            this.cc = new CookieContainer();
+            this.spwc = new SpWebClient(cc);
             this.spwc.Headers.Add("User-Agent", "User-Agent: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.97 Safari/537.36");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            There_are_many_ways_to_fame.Clear();
-            hackListURL.Clear();
-            //INIT ProcessBar
-            progressSmall.Value = 0;
-            //Get All URL
-            string[] requestURL = (!String.IsNullOrEmpty(HackList.Text.Trim())) ? HackList.Lines : null;
-
-            //Filter Error URL
-            foreach (string url in requestURL)
+            if (HackList.Lines.Length > 0)
             {
-                if (url.Contains("http"))
-                {
-                    hackListURL.Add(url);
-                }
+                //Protect Memory Leak
+                GC.Collect();
+                downloadThread = new Thread(this.go);
+                downloadThread.Start();
+                ((Button)sender).Enabled = false;
+                ((Button)sender).Text = "Downloading...";
             }
-
-            requestURL = null;
-
-            //Decrypt & ADD 
-            foreach (string url in hackListURL)
+            else
             {
-                string ret = spwc.DownloadString(url, Encoding.UTF8);
-
-                Regex regTitle = new Regex(@"(?<=<title[^>]*>)([^<]*)(?=</title>)");
-                string title = regTitle.Match(ret).Groups[0].Value;
-                FileName.Text = title;
-                Regex regSWF = new Regex("com/play.swf\x22, \x22([^\x22]+)\x22");
-                Regex regCid = new Regex(@"=[^\x26]+\x26");
-                string ct = regSWF.Match(ret).Groups[0].Value;
-                String cid = regCid.Match(ct).Groups[0].Value.Trim('\x26').Trim('\x3d');
-                ret = spwc.DownloadString(API.decryptHook(cid),Encoding.UTF8);
-                ret = API.bilibiliDownloadURL(ret);
-                There_are_many_ways_to_fame.Add(new Data(title, ret));
-            }
-
-            //Check MAX URL
-            MyThread = new System.Threading.Thread(this.DownloadThread);
-            MyThread.Start();
-
-
-
-        }
-
-        public void DownloadThread()
-        {
-
-            for (int i = 0; i < There_are_many_ways_to_fame.Count;i++ )
-            {
-                DownloadFunc(There_are_many_ways_to_fame[i].getUrl(), folder + There_are_many_ways_to_fame[i].getName() + ".flv");
-                Console.WriteLine(There_are_many_ways_to_fame[i].getUrl());
-            }
-
-        }
-
-
-
-        public void DownloadFunc(String url, String downloadPath)
-        {
-
-            _TOTALSIZE = 0;
-            progressSmall.Value = 0;
-            
-            try
-            {
-                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-                HttpWebResponse httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-
-                System.IO.Stream dataStream = httpResponse.GetResponseStream();
-                MAXSIZE = (int)httpResponse.ContentLength;
-                progressSmall.Maximum = (int)MAXSIZE;
-                Console.WriteLine("總大小:" + httpResponse.ContentLength);
-          
-                byte[] buffer = new byte[8192];
-
-                FileStream fs = new FileStream(downloadPath,
-                FileMode.Create, FileAccess.Write);
-                int size = 0;
-                do
-                {
-                    size = dataStream.Read(buffer, 0, buffer.Length);
-                    _TOTALSIZE += size;
-                    progressSmall.Value = (int)_TOTALSIZE;
-                    label2.Text = _TOTALSIZE + "/" + httpResponse.ContentLength;
-                    if (size > 0)
-                        fs.Write(buffer, 0, size);
-                } while (size > 0);
-                fs.Close();
-
-                httpResponse.Close();
-            }
-            catch (Exception e)
-            {
-
+                MessageBox.Show("URL IS NULL");
             }
         }
 
@@ -140,6 +60,82 @@ namespace WindowsFormsApplication1
             System.Diagnostics.Process.Start("http://never-nop.com/");
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Close Thread
+            try
+            {
+                downloadThread.Abort();
+            }
+            catch (Exception ex) {}
+        }
+
+        public void go()
+        {
+            try
+            {
+                There_are_many_ways_to_fame.Clear();
+                hackListURL.Clear();
+                //INIT ProcessBar
+                progressSmall.Value = 0;
+                progressBarAll.Minimum = 0;
+                progressBarAll.Value = 0;
+                //Get All URL
+
+                string[] requestURL = (!String.IsNullOrEmpty(HackList.Text.Trim())) ? HackList.Lines : null;
+
+                //Filter Error URL
+                foreach (string url in requestURL)
+                {
+                    if (url.Contains("http"))
+                    {
+                        hackListURL.Add(url);
+                    }
+                }
+                //Protect Memory Leak
+                requestURL = null;
+                GC.Collect();
+
+                //Decrypt & ADD 
+                foreach (string url in hackListURL)
+                {
+                    string ret = spwc.DownloadString(url, Encoding.UTF8);
+                    Regex regTitle = new Regex(@"(?<=<title[^>]*>)([^<]*)(?=</title>)");
+                    string title = regTitle.Match(ret).Groups[0].Value;
+
+                    Regex regSWF = new Regex("com/play.swf\x22, \x22([^\x22]+)\x22");
+                    Regex regCid = new Regex(@"=[^\x26]+\x26");
+                    string ct = regSWF.Match(ret).Groups[0].Value;
+                    String cid = regCid.Match(ct).Groups[0].Value.Trim('\x26').Trim('\x3d');
+                    ret = spwc.DownloadString(API.decryptHook(cid), Encoding.UTF8);
+                    ret = API.bilibiliDownloadURL(ret);
+                    There_are_many_ways_to_fame.Add(new Data(title, ret));
+                }
+                //Check MAX URL
+                progressBarAll.Maximum = There_are_many_ways_to_fame.Count;
+
+                //DownLoad Func
+                for (int i = 0; i < There_are_many_ways_to_fame.Count; i++)
+                {
+                    progressSmall.Value = 0;
+                    Now.Text = Convert.ToString("Runing:" + (i + 1) + "/" + There_are_many_ways_to_fame.Count);
+                    FileName.Text = There_are_many_ways_to_fame[i].getName();
+                    API.DownloadFunc(There_are_many_ways_to_fame[i].getUrl(), folder + There_are_many_ways_to_fame[i].getName() + ".flv", progressSmall, label2);
+                    ++progressBarAll.Value;
+                    Console.WriteLine(There_are_many_ways_to_fame[i].getUrl());
+                }
+                MessageBox.Show("FINISH ^________^+");
+                //Protect Memory Leak
+                GC.Collect();
+                button1.Enabled = true;
+                button1.Text = "StartDownload";
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("URL IS NULL");
+            }
+        }
 
 
 

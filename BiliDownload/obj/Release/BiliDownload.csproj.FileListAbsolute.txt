@@ -1,0 +1,9 @@
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\bin\Release\BiliDownload.exe.config
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\bin\Release\BiliDownload.exe
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\bin\Release\BiliDownload.pdb
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\WindowsFormsApplication1.Form1.resources
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\BiliDownload.Properties.Resources.resources
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\BiliDownload.csproj.GenerateResource.Cache
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\BiliDownload.exe
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\BiliDownload.pdb
+C:\Users\um\Desktop\BiliDownload-master (2)\BiliDownload-master\BiliDownload\obj\Release\BiliDownload.csprojResolveAssemblyReference.cache
