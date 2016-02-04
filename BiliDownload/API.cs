@@ -1,17 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.IO;
-using System.Security.Cryptography;
-using System.Windows.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,12 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 using System.Net;
-using System.Collections.Specialized;
-using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.IO;
-using System.Threading;
+using System.Security.Cryptography;
+
 namespace WindowsFormsApplication1
 {
 
@@ -66,9 +51,7 @@ namespace WindowsFormsApplication1
 
                 System.IO.Stream dataStream = httpResponse.GetResponseStream();
                 MAXSIZE = (int)httpResponse.ContentLength;
-                Form1 obj = new Form1();
                 processbarSmall.Maximum = (int)MAXSIZE;
-                Console.WriteLine("總大小:" + httpResponse.ContentLength);
 
                 byte[] buffer = new byte[8192];
 
