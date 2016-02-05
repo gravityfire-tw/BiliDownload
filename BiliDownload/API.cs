@@ -20,6 +20,28 @@ namespace WindowsFormsApplication1
 
         private static double _TOTALSIZE = 0, MAXSIZE = 0;
 
+        public static string biliblilCid(string ret)
+        {
+            //Old Version Flash
+            String cid = "";
+            Regex regSWF = new Regex("com/play.swf\x22, \x22([^\x22]+)\x22");
+            Regex regCid = new Regex(@"=[^\x26]+\x26");
+            string ct = regSWF.Match(ret).Groups[0].Value;
+            cid = regCid.Match(ct).Groups[0].Value.Trim('\x26').Trim('\x3d');
+            //New Version Flash 20160205 FIX/
+            if (cid == "")
+            {
+                ret = ret.Substring(ret.IndexOf("cid=") + "cid=".Length);
+                cid = ret.Substring(0, ret.IndexOf("&"));
+            }
+            return cid;
+        }
+        public static string biliblilTitle(string ret)
+        {
+            Regex regTitle = new Regex(@"(?<=<title[^>]*>)([^<]*)(?=</title>)");
+            ret = regTitle.Match(ret).Groups[0].Value;
+            return ret;
+        }
         public static string bilibiliDownloadURL(string str)
         {
             str = str.Substring(str.IndexOf("<url><![CDATA[") + "<url><![CDATA[".Length);
@@ -29,7 +51,7 @@ namespace WindowsFormsApplication1
 
         public static string decryptHook(string cid)
         {
-            String appkey = "85eb6835b0a1034e"+"Thanks anonymous Account ^______^+".Substring(0, 0);
+            String appkey = "85eb6835b0a1034e" + "Thanks anonymous Account ^______^+".Substring(0, 0);
             String secretkey = "2ad42749773c441109bdc0191257a664";
             MD5 md5 = MD5.Create();
             byte[] source = Encoding.UTF8.GetBytes("appkey=" + appkey + "&cid=" + cid + secretkey);//將字串轉為Byte[]
@@ -39,11 +61,9 @@ namespace WindowsFormsApplication1
             return result;
         }
 
-        public static void DownloadFunc(String url, String downloadPath,ProgressBar processbarSmall,Label labelSmall)
+        public static void DownloadFunc(String url, String downloadPath, ProgressBar processbarSmall, Label labelSmall)
         {
-
             _TOTALSIZE = 0;
-
             try
             {
                 HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -51,6 +71,7 @@ namespace WindowsFormsApplication1
 
                 System.IO.Stream dataStream = httpResponse.GetResponseStream();
                 MAXSIZE = (int)httpResponse.ContentLength;
+
                 processbarSmall.Maximum = (int)MAXSIZE;
 
                 byte[] buffer = new byte[8192];
@@ -71,9 +92,9 @@ namespace WindowsFormsApplication1
 
                 httpResponse.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
     }

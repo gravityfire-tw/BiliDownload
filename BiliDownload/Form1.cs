@@ -18,9 +18,8 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-
         //My Name is UM ^______^  Welcome to Fork me XDD!!!
-        
+
         private CookieContainer cc;
         private SpWebClient spwc;
         private List<string> hackListURL = new List<string>();
@@ -74,12 +73,13 @@ namespace WindowsFormsApplication1
         {
             try
             {
+                //INIT 
                 There_are_many_ways_to_fame.Clear();
                 hackListURL.Clear();
-                //INIT ProcessBar
                 progressSmall.Value = 0;
                 progressBarAll.Minimum = 0;
                 progressBarAll.Value = 0;
+
                 //Get All URL
 
                 string[] requestURL = (!String.IsNullOrEmpty(HackList.Text.Trim())) ? HackList.Lines : null;
@@ -100,13 +100,8 @@ namespace WindowsFormsApplication1
                 foreach (string url in hackListURL)
                 {
                     string ret = spwc.DownloadString(url, Encoding.UTF8);
-                    Regex regTitle = new Regex(@"(?<=<title[^>]*>)([^<]*)(?=</title>)");
-                    string title = regTitle.Match(ret).Groups[0].Value;
-
-                    Regex regSWF = new Regex("com/play.swf\x22, \x22([^\x22]+)\x22");
-                    Regex regCid = new Regex(@"=[^\x26]+\x26");
-                    string ct = regSWF.Match(ret).Groups[0].Value;
-                    String cid = regCid.Match(ct).Groups[0].Value.Trim('\x26').Trim('\x3d');
+                    string title = API.biliblilTitle(ret);
+                    String cid = API.biliblilCid(ret);
                     ret = spwc.DownloadString(API.decryptHook(cid), Encoding.UTF8);
                     ret = API.bilibiliDownloadURL(ret);
                     There_are_many_ways_to_fame.Add(new Data(title, ret));
@@ -118,7 +113,7 @@ namespace WindowsFormsApplication1
                 for (int i = 0; i < There_are_many_ways_to_fame.Count; i++)
                 {
                     progressSmall.Value = 0;
-                    Now.Text = Convert.ToString("Runing:" + (i + 1) + "/" + There_are_many_ways_to_fame.Count);
+                    Now.Text = Convert.ToString("Running:" + (i + 1) + "/" + There_are_many_ways_to_fame.Count);
                     FileName.Text = There_are_many_ways_to_fame[i].getName();
                     API.DownloadFunc(There_are_many_ways_to_fame[i].getUrl(), folder + There_are_many_ways_to_fame[i].getName() + ".flv", progressSmall, label2);
                     ++progressBarAll.Value;
